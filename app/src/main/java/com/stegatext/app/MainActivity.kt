@@ -1,6 +1,8 @@
 package com.stegatext.app
 
 import android.content.ClipData
+import android.content.Intent
+import android.view.KeyEvent
 import android.content.ClipDescription
 import android.content.ClipboardManager
 import android.content.Intent
@@ -22,6 +24,22 @@ import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
 
 class MainActivity : AppCompatActivity() {
+
+    private var lastVolumeDown = 0L
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            val now = System.currentTimeMillis()
+            if (now - lastVolumeDown < 1500) {
+                lastVolumeDown = 0
+                startActivity(Intent(this, FileVaultActivity::class.java))
+                return true
+            }
+            lastVolumeDown = now
+            return false
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 
     private var pickTarget = 0
     private var filePayload: Payload.File? = null

@@ -264,7 +264,7 @@ object StegoEngine {
         return out
     }
 
-    private fun buildPlain(payload: Payload): ByteArray {
+    internal fun buildPlain(payload: Payload): ByteArray {
         val out = ArrayList<Byte>()
         INNER_MAGIC.forEach { out.add(it) }
         when (payload) {
@@ -285,7 +285,7 @@ object StegoEngine {
         return out.toByteArray()
     }
 
-    private fun parsePlain(plain: ByteArray): Revealed? {
+    internal fun parsePlain(plain: ByteArray): Revealed? {
         if (plain.size < 7) return null
         for (i in INNER_MAGIC.indices) if (plain[i] != INNER_MAGIC[i]) return null
         val type = plain[5].toInt()

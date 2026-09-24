@@ -24,6 +24,14 @@
     <string name="output_title">Stego text (send as is)</string>
     <string name="btn_copy">Copy</string>
     <string name="btn_share">Share</string>
+    <string name="vault_title">Hidden file vault</string>
+    <string name="vault_hint">Carrier file + secret file + key. Opened from volume-down gesture or main app button.</string>
+    <string name="vault_pick_carrier">Select carrier file (audio/image/any)</string>
+    <string name="vault_pick_secret">Select secret file (any format)</string>
+    <string name="vault_pick_stego">Select stego file to reveal</string>
+    <string name="vault_stego_title">Stego output file</string>
+    <string name="vault_done">Hidden successfully (%1$s bytes)</string>
+    <string name="vault_capacity_txt">Carrier size: %1$s bytes</string>
     <string name="btn_save">Save</string>
 
     <string name="carrier_hint_reveal">Paste the stego text here…</string>

@@ -24,6 +24,14 @@
     <string name="output_title">متن نهان (همین‌طور بفرست)</string>
     <string name="btn_copy">کپی</string>
     <string name="btn_share">اشتراک</string>
+    <string name="vault_title">گنجینه فایل مخفی</string>
+    <string name="vault_hint">فایل حامل + فایل محرمانه + کلید. باز شدن فقط با ژست ولوم یا دکمه در اپ اصلی.</string>
+    <string name="vault_pick_carrier">انتخاب فایل حامل (صوتی/تصویری/هر نوعی)</string>
+    <string name="vault_pick_secret">انتخاب فایل محرمانه (هر فرمتی)</string>
+    <string name="vault_pick_stego">انتخاب فایل نهان برای بازیابی</string>
+    <string name="vault_stego_title">فایل خروجی نهان</string>
+    <string name="vault_done">با موفقیت مخفی شد (%1$s بایت)</string>
+    <string name="vault_capacity_txt">اندازه حامل: %1$s بایت</string>
     <string name="btn_save">ذخیره</string>
 
     <string name="carrier_hint_reveal">متن نهان را اینجا بچسبانید…</string>

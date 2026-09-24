@@ -18,6 +18,13 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".FileVaultActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:taskAffinity=""
+            android:windowSoftInputMode="adjustResize" />
+
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
             android:enabled="false"
