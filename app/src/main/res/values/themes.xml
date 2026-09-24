@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.StegaText" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/accent1</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">@color/card</item>
+        <item name="colorOnSurface">@color/text</item>
+        <item name="android:textColorHint" >@color/text_hint</item>
+        <item name="android:windowBackground">@drawable/bg_gradient</item>
+        <item name="android:statusBarColor">@color/grad_end</item>
+    </style>
+</resources>

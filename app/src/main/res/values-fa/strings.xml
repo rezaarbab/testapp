@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StegaText</string>
+    <string name="tagline">مخفی‌سازی راز داخل متن معمولی</string>
+    <string name="btn_lang">EN</string>
+    <string name="mode_hide">مخفی‌سازی</string>
+    <string name="mode_reveal">بازیابی</string>
+
+    <string name="carrier_hint_hide">متن حامل (داستان/پاراگراف) را اینجا بچسبانید…</string>
+    <string name="btn_sample">درج داستان نمونه</string>
+    <string name="secret_title">پیام محرمانه</string>
+    <string name="radio_text">متن محرمانه</string>
+    <string name="radio_file">فایل محرمانه</string>
+    <string name="secret_hint">پیام مخفی را بنویسید…</string>
+    <string name="btn_pick_file">انتخاب فایل (هر نوعی)</string>
+    <string name="no_file">فایلی انتخاب نشده</string>
+    <string name="pw_title">کلید (اجباری)</string>
+    <string name="pw_hint">کلید رمزنگاری را وارد کنید</string>
+    <string name="robust">حالت سالم (فقط هموگلیف، بدون کاراکتر نامرئی)</string>
+    <string name="capacity">ظرفیت: %1$s بایت — نیاز: %2$s بایت</string>
+    <string name="capacity_zero">متن حامل خالی است</string>
+    <string name="btn_hide">مخفی کن و متن نهان بساز</string>
+    <string name="output_title">متن نهان (همین‌طور بفرست)</string>
+    <string name="btn_copy">کپی</string>
+    <string name="btn_share">اشتراک</string>
+    <string name="btn_save">ذخیره</string>
+
+    <string name="carrier_hint_reveal">متن نهان را اینجا بچسبانید…</string>
+    <string name="btn_reveal">بازیابی محرمانه</string>
+    <string name="result_title">نتیجه</string>
+    <string name="empty_warn">فیلدهای لازم را کامل کنید</string>
+
+    <string name="err_capacity">پیام محرمانه خیلی بزرگ است! نیاز %1$s بایت ولی ظرفیت متن حامل %2$s بایت — متن حامل را بلندتر کنید یا پیام را کوتاه‌تر.</string>
+    <string name="err_badkey">کلید نامعتبر است (یا داده آسیب دیده)</string>
+    <string name="err_nothing">در این متن چیز مخفی‌شده‌ای پیدا نشد</string>
+    <string name="err_file_read">خواندن فایل ممکن نشد</string>
+    <string name="err_file_big">فایل بزرگ‌تر از ۸ مگابایت پشتیبانی نمی‌شود</string>
+    <string name="done_copied">کپی شد</string>
+    <string name="done_hidden">با موفقیت مخفی شد</string>
+    <string name="done_saved">ذخیره شد</string>
+
+    <string name="file_result">فایل مخفی: %1$s (%2$s بایت)</string>
+    <string name="sample_story">شبی که ستاره‌ها بالا آمدند، بچه‌ها پشت پنجره نشستند. عمو رضا نمی‌دانست که این شب، شبِ رازهای کوچک است. خانه‌های شهر از این قصه‌ها خبر نداشتند، اما بچه‌ها آرزوی بزرگ‌ترین‌ها را در دل داشتند. عمو رضا کِیکی خوب و شیرین پخت و گفت: بزرگ‌ترین گنج‌ها در صندوق‌های آهنی نیستند؛ کلمه‌های خوب و مهربان‌های ما هستند. پسرک لبخندی زد و پروانه‌های کوچک را به باغ فرستاد. آن شب همه‌ی خانه‌های آن کوچه چراغانی شد و ستاره‌ها با بچه‌ها یک قرارداد بستند: هر آرزوی خوب، یک ستاره‌ی تازه می‌شود. صبح که شد، باره‌ها؟ نه؛ آفتابی بود. بچه‌ها به پارک رفتند و کِیکی را شرکت‌ها بین خودشان تقسیم کردند. آن روز برای همه‌ی بچه‌های شهر، عالی‌ترین روز سال بود.</string>
+</resources>

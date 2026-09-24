@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StegaText</string>
+    <string name="tagline">Hide a secret inside ordinary text</string>
+    <string name="btn_lang">فا</string>
+    <string name="mode_hide">Hide</string>
+    <string name="mode_reveal">Reveal</string>
+
+    <string name="carrier_hint_hide">Paste the carrier text (story/paragraph) here…</string>
+    <string name="btn_sample">Insert sample story</string>
+    <string name="secret_title">Secret payload</string>
+    <string name="radio_text">Secret text</string>
+    <string name="radio_file">Secret file</string>
+    <string name="secret_hint">Type the secret message…</string>
+    <string name="btn_pick_file">Choose file (any type)</string>
+    <string name="no_file">No file selected</string>
+    <string name="pw_title">Key (required)</string>
+    <string name="pw_hint">Enter encryption key</string>
+    <string name="robust">Robust mode (homoglyph only, no invisible characters)</string>
+    <string name="capacity">Capacity: %1$s bytes — Required: %2$s bytes</string>
+    <string name="capacity_zero">Carrier text is empty</string>
+    <string name="btn_hide">Hide and create stego text</string>
+    <string name="output_title">Stego text (send as is)</string>
+    <string name="btn_copy">Copy</string>
+    <string name="btn_share">Share</string>
+    <string name="btn_save">Save</string>
+
+    <string name="carrier_hint_reveal">Paste the stego text here…</string>
+    <string name="btn_reveal">Reveal secret</string>
+    <string name="result_title">Result</string>
+    <string name="empty_warn">Fill all required fields first</string>
+
+    <string name="err_capacity">Payload too large! Needed %1$s bytes but carrier holds only %2$s bytes — lengthen the carrier text or shrink the secret.</string>
+    <string name="err_badkey">Invalid key (or data got damaged)</string>
+    <string name="err_nothing">Nothing hidden found in this text</string>
+    <string name="err_file_read">Could not read the file</string>
+    <string name="err_file_big">File larger than 8 MB is not supported</string>
+    <string name="done_copied">Copied</string>
+    <string name="done_hidden">Hidden successfully</string>
+    <string name="done_saved">Saved</string>
+
+    <string name="file_result">Hidden file: %1$s (%2$s bytes)</string>
+    <string name="sample_story">The night the stars rose, the boys sat behind the window. Uncle Reza did not know that this was the night of small secrets. The families of the town believed the largest treasures were hidden in lead boxes, but the young man knew the most valuable wealth was the kind words he kept for everyone. He gave his sister a perfect cake and said: “Every quick reply and every kind letter is a message you can compose when you hope.” The morning came and the people walked to the park; each one made a simple joke and the story of the amazing day of our team became famous all over the town.</string>
+</resources>

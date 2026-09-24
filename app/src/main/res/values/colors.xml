@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="grad_start">#3B1D6E</color>
+    <color name="grad_center">#25134A</color>
+    <color name="grad_end">#120A24</color>
+    <color name="card">#38FFFFFF</color>
+    <color name="card_stroke">#40FFFFFF</color>
+    <color name="text">#F2ECFF</color>
+    <color name="text_hint">#9C93C9</color>
+    <color name="accent1">#8B5CF6</color>
+    <color name="accent2">#06B6D4</color>
+    <color name="icon_bg">#25134A</color>
+    <color name="error">#FF6B81</color>
+    <color name="ok">#4ADE80</color>
+</resources>
