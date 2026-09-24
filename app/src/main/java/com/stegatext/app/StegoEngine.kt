@@ -15,7 +15,7 @@ class Revealed(val isFile: Boolean, val name: String?, val bytes: ByteArray) {
 }
 
 class KeyedRandom(seed: Long) {
-    private var state: Long = (seed xor 0x9E3779B97F4A7C15L).let { if (it == 0L) 0xB504F32DL else it }
+    private var state: Long = (seed xor (-0x61C8864680B583EBL)).let { if (it == 0L) 0xB504F32DL else it }
 
     fun next(): Long {
         var x = state

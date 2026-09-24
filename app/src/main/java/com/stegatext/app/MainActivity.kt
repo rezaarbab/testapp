@@ -124,8 +124,8 @@ class MainActivity : AppCompatActivity() {
     private fun onPayloadTypeChanged() {
         val isFile = findViewById<RadioGroup>(R.id.payloadGroup).checkedRadioButtonId == R.id.radioFile
         findViewById<View>(R.id.etSecret).visibility = if (isFile) View.GONE else View.VISIBLE
-        val parent = findViewById<View>(R.id.etSecret).parent
-        if (parent != null) parent.visibility = if (isFile) View.GONE else View.VISIBLE
+            val parent = findViewById<View>(R.id.etSecret).parent as? View
+            if (parent != null) parent.visibility = if (isFile) View.GONE else View.VISIBLE
         findViewById<View>(R.id.fileRow).visibility = if (isFile) View.VISIBLE else View.GONE
         if (!isFile) filePayload = null
         updateCapacity()
