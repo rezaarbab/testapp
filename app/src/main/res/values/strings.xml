@@ -2,12 +2,14 @@
 <resources>
     <string name="app_name">StegaText</string>
     <string name="tagline">Hide a secret inside ordinary text</string>
+    <string name="btn_open_vault">File Vault</string>
     <string name="btn_lang">فا</string>
     <string name="mode_hide">Hide</string>
     <string name="mode_reveal">Reveal</string>
 
     <string name="carrier_title">Carrier text</string>
     <string name="carrier_hint_hide">Paste the carrier text (story/paragraph) here…</string>
+    <string name="btn_generate_carrier">Auto-generate carrier text</string>
     <string name="btn_sample">Insert sample story</string>
     <string name="secret_title">Secret payload</string>
     <string name="radio_text">Secret text</string>

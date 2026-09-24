@@ -101,6 +101,11 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.radioFile).setOnClickListener { onPayloadTypeChanged() }
         findViewById<View>(R.id.radioText).setOnClickListener { onPayloadTypeChanged() }
 
+        findViewById<View>(R.id.btnGenerate).setOnClickListener { generateCarrier() }
+        findViewById<View>(R.id.btnOpenVault).setOnClickListener {
+            startActivity(Intent(this, FileVaultActivity::class.java))
+        }
+
         findViewById<View>(R.id.btnSample).setOnClickListener {
             etCarrier.setText(getString(R.string.sample_story))
             etCarrier.setSelection(etCarrier.text?.length ?: 0)
@@ -133,6 +138,24 @@ class MainActivity : AppCompatActivity() {
         etCarrier.addTextChangedListener(watcher)
         etSecret.addTextChangedListener(watcher)
         etCarrierX.addTextChangedListener(watcher)
+    }
+
+    private fun generateCarrier() {
+        try {
+            val payloadBits: Int = if (findViewById<RadioGroup>(R.id.payloadGroup).checkedRadioButtonId == R.id.radioFile) {
+                val f = filePayload
+                if (f == null) 640 else StegoEngine.neededBits(StegoEngine.plainFileSize(f.name.toByteArray(Charsets.UTF_8).size, f.bytes.size))
+            } else {
+                val s = etSecret.text?.toString() ?: ""
+                if (s.isEmpty()) 640 else StegoEngine.neededBits(StegoEngine.plainTextSize(s.toByteArray(Charsets.UTF_8).size))
+            }
+            val robust = switchRobust.isChecked
+            val text = StoryGenerator.generate(payloadBits, robust)
+            etCarrier.setText(text)
+            updateCapacity()
+        } catch (e: Exception) {
+            toast(e.message ?: "error")
+        }
     }
 
     private fun btnHide0(): View = findViewById(R.id.btnHide)

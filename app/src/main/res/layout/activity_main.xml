@@ -29,7 +29,22 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/btnOpenVault"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/card_bg"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/btn_open_vault"
+                android:textColor="@color/text"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/btnLang"
+                android:layout_marginEnd="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:background="@drawable/card_bg"
@@ -115,6 +130,19 @@
                         android:textColor="@color/text"
                         android:textColorHint="@color/text_hint" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnGenerate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/card_bg"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/btn_generate_carrier"
+                    android:textColor="@color/text"
+                    android:textSize="13sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnSample"

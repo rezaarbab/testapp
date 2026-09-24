@@ -2,12 +2,14 @@
 <resources>
     <string name="app_name">StegaText</string>
     <string name="tagline">مخفی‌سازی راز داخل متن معمولی</string>
+    <string name="btn_open_vault">گنجینه فایل</string>
     <string name="btn_lang">EN</string>
     <string name="mode_hide">مخفی‌سازی</string>
     <string name="mode_reveal">بازیابی</string>
 
     <string name="carrier_title">متن حامل</string>
     <string name="carrier_hint_hide">متن حامل (داستان/پاراگراف) را اینجا بچسبانید…</string>
+    <string name="btn_generate_carrier">ساخت خودکار متن حامل</string>
     <string name="btn_sample">درج داستان نمونه</string>
     <string name="secret_title">پیام محرمانه</string>
     <string name="radio_text">متن محرمانه</string>
