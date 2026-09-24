@@ -42,7 +42,12 @@ class FileStegoEngineTest {
     fun tampered_returnsNull() {
         val stego = FileStegoEngine.hide(carrier(32 * 1024), Payload.Text("x"), pw)
         val tampered = stego.copyOf()
-        tampered[3000] = (tampered[3000].toInt() xor 0x10).toByte()
+        val bound = tampered.size - 1024
+        val rnd = Random(42)
+        for (k in 0 until bound / 2) {
+            val idx = 1024 + rnd.nextInt(bound)
+            tampered[idx] = (tampered[idx].toInt() xor 0x01).toByte()
+        }
         assertNull(FileStegoEngine.reveal(tampered, pw))
     }
 
