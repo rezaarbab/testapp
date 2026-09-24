@@ -33,7 +33,7 @@ android {
     testOptions {
         unitTests.all {
             it.testLogging {
-                events("failed", "error", "skipped")
+                events("failed", "skipped", "standardOut")
                 exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
             }
         }
