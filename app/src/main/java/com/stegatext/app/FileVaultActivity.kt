@@ -168,7 +168,7 @@ class FileVaultActivity : AppCompatActivity() {
             tvCapacity.text = getString(R.string.capacity_zero)
             return
         }
-        tvCapacity.text = getString(R.string.vault_capacity_txt, c.size.toString(), capacity(c).toString())
+        tvCapacity.text = getString(R.string.vault_capacity_txt, c.size.toString(), FileStegoEngine.capacity(c).toString())
     }
 
     private fun toast(msg: String) {

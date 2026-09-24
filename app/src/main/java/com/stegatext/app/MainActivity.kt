@@ -5,7 +5,6 @@ import android.content.Intent
 import android.view.KeyEvent
 import android.content.ClipDescription
 import android.content.ClipboardManager
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
