@@ -15,7 +15,7 @@ class StegoEngineTest {
 
     private fun latinCarrier(): String {
         val base = "The quick brown fox jumps over the lazy dog while the young man makes a perfect cake for everyone. "
-        return base.repeat(12)
+        return base.repeat(25)
     }
 
     private fun faCarrier(): String {
