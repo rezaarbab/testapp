@@ -39,6 +39,7 @@
     <string name="carrier_hint_reveal">Paste the stego text here…</string>
     <string name="btn_reveal">Reveal secret</string>
     <string name="result_title">Result</string>
+    <string name="working">Working…</string>
     <string name="empty_warn">Fill all required fields first</string>
 
     <string name="err_capacity">Payload too large! Needed %1$s bytes but carrier holds only %2$s bytes — lengthen the carrier text or shrink the secret.</string>

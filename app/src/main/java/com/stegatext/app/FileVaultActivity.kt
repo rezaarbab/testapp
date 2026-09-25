@@ -130,36 +130,48 @@ class FileVaultActivity : AppCompatActivity() {
         val s = secret
         val pw = etPassword.text?.toString() ?: ""
         if (c == null || s == null || pw.isEmpty()) { toast(getString(R.string.empty_warn)); return }
-        try {
-            val out = FileStegoEngine.hide(c, s, pw.toCharArray())
-            stego = out
-            findViewById<View>(R.id.vaultStegoCard).visibility = View.VISIBLE
-            toast(getString(R.string.vault_done, out.size.toString()))
-        } catch (e: CapacityException) {
-            toast(getString(R.string.err_capacity, e.neededBits.toString(), e.availableBits.toString()))
-        } catch (e: Exception) {
-            toast(e.message ?: "error")
-        }
+        toast(getString(R.string.working))
+        Thread {
+            try {
+                val out = FileStegoEngine.hide(c, s, pw.toCharArray())
+                runOnUiThread {
+                    stego = out
+                    findViewById<View>(R.id.vaultStegoCard).visibility = View.VISIBLE
+                    toast(getString(R.string.vault_done, out.size.toString()))
+                }
+            } catch (e: CapacityException) {
+                runOnUiThread {
+                    toast(getString(R.string.err_capacity, e.neededBits.toString(), e.availableBits.toString()))
+                }
+            } catch (e: Exception) {
+                runOnUiThread { toast(e.message ?: "error") }
+            }
+        }.start()
     }
 
     private fun reveal() {
         val s = stego
         val pw = etPassword.text?.toString() ?: ""
         if (s == null || pw.isEmpty()) { toast(getString(R.string.empty_warn)); return }
-        val r = FileStegoEngine.reveal(s, pw.toCharArray())
-        if (r == null) {
-            toast(getString(R.string.err_badkey))
-            return
-        }
-        revealed = r
-        if (r.isFile) {
-            tvResult.text = getString(R.string.file_result, r.name ?: "file.bin", r.bytes.size.toString())
-            findViewById<View>(R.id.btnVaultSaveRevealed).visibility = View.VISIBLE
-        } else {
-            tvResult.text = r.asText()
-            findViewById<View>(R.id.btnVaultSaveRevealed).visibility = View.GONE
-        }
-        findViewById<View>(R.id.vaultResultCard).visibility = View.VISIBLE
+        toast(getString(R.string.working))
+        Thread {
+            val r = FileStegoEngine.reveal(s, pw.toCharArray())
+            runOnUiThread {
+                if (r == null) {
+                    toast(getString(R.string.err_badkey))
+                    return@runOnUiThread
+                }
+                revealed = r
+                if (r.isFile) {
+                    tvResult.text = getString(R.string.file_result, r.name ?: "file.bin", r.bytes.size.toString())
+                    findViewById<View>(R.id.btnVaultSaveRevealed).visibility = View.VISIBLE
+                } else {
+                    tvResult.text = r.asText()
+                    findViewById<View>(R.id.btnVaultSaveRevealed).visibility = View.GONE
+                }
+                findViewById<View>(R.id.vaultResultCard).visibility = View.VISIBLE
+            }
+        }.start()
     }
 
     private fun updateCapacity() {

@@ -7,6 +7,8 @@ import android.content.ClipDescription
 import android.content.ClipboardManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
@@ -205,17 +207,35 @@ class MainActivity : AppCompatActivity() {
         return null
     }
 
+    private val capacityHandler = object : Handler(Looper.getMainLooper()) {}
+    private var capacityRunnable: Runnable? = null
+    private var capacitySeq = 0
+
     private fun updateCapacity() {
+        capacityRunnable?.let { capacityHandler.removeCallbacks(it) }
+        val task = Runnable { computeCapacityAsync() }
+        capacityRunnable = task
+        capacityHandler.postDelayed(task, 400)
+    }
+
+    private fun computeCapacityAsync() {
+        val seq = ++capacitySeq
         val carrier = etCarrier.text?.toString() ?: ""
-        val capBits = StegoEngine.capacityBits(carrier, switchRobust.isChecked)
-        val needBits: Int = if (findViewById<RadioGroup>(R.id.payloadGroup).checkedRadioButtonId == R.id.radioFile) {
-            val f = filePayload
-            if (f == null) 0 else StegoEngine.neededBits(StegoEngine.plainFileSize(f.name.toByteArray(Charsets.UTF_8).size, f.bytes.size))
-        } else {
-            val secret = etSecret.text?.toString() ?: ""
-            if (secret.isEmpty()) 0 else StegoEngine.neededBits(StegoEngine.plainTextSize(secret.toByteArray(Charsets.UTF_8).size))
-        }
-        tvCapacity.text = formatCapacity(capBits, needBits)
+        val robust = switchRobust.isChecked
+        val useFile = findViewById<RadioGroup>(R.id.payloadGroup).checkedRadioButtonId == R.id.radioFile
+        val secret = if (useFile) null else etSecret.text?.toString() ?: ""
+        val file = if (useFile) filePayload else null
+        Thread {
+            val capBits = StegoEngine.capacityBits(carrier, robust)
+            val needBits: Int = if (useFile) {
+                if (file == null) 0 else StegoEngine.neededBits(StegoEngine.plainFileSize(file.name.toByteArray(Charsets.UTF_8).size, file.bytes.size))
+            } else {
+                if (secret == null || secret.isEmpty()) 0 else StegoEngine.neededBits(StegoEngine.plainTextSize(secret.toByteArray(Charsets.UTF_8).size))
+            }
+            runOnUiThread {
+                if (seq == capacitySeq) tvCapacity.text = formatCapacity(capBits, needBits)
+            }
+        }.start()
     }
 
     private fun formatCapacity(capBits: Int, needBits: Int): String {
@@ -239,36 +259,59 @@ class MainActivity : AppCompatActivity() {
             if (secret.isEmpty()) { toast(getString(R.string.empty_warn)); return }
             Payload.Text(secret) as Payload
         }
-        try {
-            val stego = StegoEngine.hide(carrier, payload, password.toCharArray(), switchRobust.isChecked)
-            tvOutput.text = stego
-            findViewById<View>(R.id.outputCard).visibility = View.VISIBLE
-            toast(getString(R.string.done_hidden))
-        } catch (e: CapacityException) {
-            toast(getString(R.string.err_capacity, ((e.neededBits + 7) / 8).toString(), (e.availableBits / 8).toString()))
-        } catch (e: Exception) {
-            toast(e.message ?: "error")
-        }
+        val robust = switchRobust.isChecked
+        val pw = password.toCharArray()
+        btnHide0().isEnabled = false
+        toast(getString(R.string.working))
+        Thread {
+            try {
+                val out = StegoEngine.hide(carrier, payload, pw, robust)
+                runOnUiThread {
+                    tvOutput.text = out
+                    findViewById<View>(R.id.outputCard).visibility = View.VISIBLE
+                    btnHide0().isEnabled = true
+                    toast(getString(R.string.done_hidden))
+                }
+            } catch (e: CapacityException) {
+                runOnUiThread {
+                    btnHide0().isEnabled = true
+                    toast(getString(R.string.err_capacity, ((e.neededBits + 7) / 8).toString(), (e.availableBits / 8).toString()))
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    btnHide0().isEnabled = true
+                    toast(e.message ?: "error")
+                }
+            }
+        }.start()
     }
 
     private fun doReveal() {
         val stego = etCarrierX.text?.toString() ?: ""
         val password = etPasswordX.text?.toString() ?: ""
         if (stego.isEmpty() || password.isEmpty()) { toast(getString(R.string.empty_warn)); return }
-        val r = StegoEngine.reveal(stego, password.toCharArray())
-        if (r == null) {
-            toast(getString(R.string.err_badkey))
-            return
-        }
-        extracted = r
-        if (r.isFile) {
-            tvResultX.text = getString(R.string.file_result, r.name ?: "file.bin", r.bytes.size.toString())
-            findViewById<View>(R.id.btnSaveX).visibility = View.VISIBLE
-        } else {
-            tvResultX.text = r.asText()
-            findViewById<View>(R.id.btnSaveX).visibility = View.GONE
-        }
-        findViewById<View>(R.id.resultCard).visibility = View.VISIBLE
+        val pw = password.toCharArray()
+        btnReveal0().isEnabled = false
+        toast(getString(R.string.working))
+        Thread {
+            val r = StegoEngine.reveal(stego, pw)
+            runOnUiThread {
+                btnReveal0().isEnabled = true
+                if (r == null) {
+                    toast(getString(R.string.err_badkey))
+                    return@runOnUiThread
+                }
+                extracted = r
+                if (r.isFile) {
+                    tvResultX.text = getString(R.string.file_result, r.name ?: "file.bin", r.bytes.size.toString())
+                    findViewById<View>(R.id.btnSaveX).visibility = View.VISIBLE
+                } else {
+                    tvResultX.text = r.asText()
+                    findViewById<View>(R.id.btnSaveX).visibility = View.GONE
+                }
+                findViewById<View>(R.id.resultCard).visibility = View.VISIBLE
+            }
+        }.start()
     }
 
     private fun requestSave(suggested: String, bytes: ByteArray) {
