@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun generateCarrier() {
-        toast(getString(R.string.working))
+        val password = etPassword.text?.toString() ?: ""
         val payloadBits: Int = if (findViewById<RadioGroup>(R.id.payloadGroup).checkedRadioButtonId == R.id.radioFile) {
             val f = filePayload
             if (f == null) 640 else StegoEngine.neededBits(StegoEngine.plainFileSize(f.name.toByteArray(Charsets.UTF_8).size, f.bytes.size))
@@ -153,17 +153,52 @@ class MainActivity : AppCompatActivity() {
             if (s.isEmpty()) 640 else StegoEngine.neededBits(StegoEngine.plainTextSize(s.toByteArray(Charsets.UTF_8).size))
         }
         val robust = switchRobust.isChecked
+        val hasPayload = if (findViewById<RadioGroup>(R.id.payloadGroup).checkedRadioButtonId == R.id.radioFile) {
+            filePayload != null
+        } else {
+            !(etSecret.text?.toString().isNullOrEmpty())
+        }
+        toast(getString(R.string.working))
         Thread {
             try {
                 val text = StoryGenerator.generate(payloadBits, robust)
-                runOnUiThread {
-                    etCarrier.setText(text)
-                    updateCapacity()
+                if (text.length <= 40_000) {
+                    runOnUiThread {
+                        etCarrier.setText(text)
+                        updateCapacity()
+                    }
+                } else if (hasPayload && password.isNotEmpty()) {
+                    val payload = buildPayloadOrNull(useFile = findViewById<RadioGroup>(R.id.payloadGroup).checkedRadioButtonId == R.id.radioFile)
+                        ?: return@Thread
+                    try {
+                        val out = StegoEngine.hide(text, payload, password.toCharArray(), robust)
+                        hiddenResult = out
+                        runOnUiThread {
+                            tvOutput.text = if (out.length > 600) out.take(600) + "…" else out
+                            findViewById<View>(R.id.outputCard).visibility = View.VISIBLE
+                            toast(getString(R.string.done_hidden))
+                        }
+                    } catch (e: CapacityException) {
+                        runOnUiThread { toast(getString(R.string.err_capacity, ((e.neededBits + 7) / 8).toString(), (e.availableBits / 8).toString())) }
+                    } catch (e: Exception) {
+                        runOnUiThread { toast(e.message ?: "error") }
+                    }
+                } else {
+                    runOnUiThread {
+                        toast(getString(R.string.huge_carrier_warn))
+                    }
                 }
             } catch (e: Exception) {
                 runOnUiThread { toast(e.message ?: "error") }
             }
         }.start()
+    }
+
+    private fun buildPayloadOrNull(useFile: Boolean): Payload? = if (useFile) {
+        filePayload
+    } else {
+        val secret = etSecret.text?.toString() ?: ""
+        if (secret.isEmpty()) null else Payload.Text(secret)
     }
 
     private fun btnHide0(): View = findViewById(R.id.btnHide)

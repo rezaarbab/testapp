@@ -67,7 +67,8 @@ object StoryGenerator {
             pool.addAll(enSentences)
             pool.addAll(ruSentences)
             shuffled(pool, System.nanoTime())
-            for (s in pool) {
+            val pool2 = pool + pool + pool
+            for (s in pool2) {
                 sb.append(s)
                 sb.append(' ')
             }
