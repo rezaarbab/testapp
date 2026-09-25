@@ -111,12 +111,6 @@ class MainActivity : AppCompatActivity() {
         }
         if (carrierBox != null) carrierBox.visibility = View.VISIBLE
 
-        val switchAuto = findViewById<MaterialSwitch>(R.id.switchAutoStory)
-        val carrierBox = findViewById<View>(R.id.etCarrier).parent as? View
-        switchAuto.setOnCheckedChangeListener { _, checked ->
-            if (carrierBox != null) carrierBox.visibility = if (checked) View.VISIBLE else View.GONE
-        }
-
         findViewById<View>(R.id.btnGenerate).setOnClickListener { autoHide() }
         findViewById<View>(R.id.btnOpenVault).setOnClickListener {
             startActivity(Intent(this, FileVaultActivity::class.java))
