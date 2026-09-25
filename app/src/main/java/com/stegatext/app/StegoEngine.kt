@@ -54,7 +54,7 @@ object StegoEngine {
     private val INNER_MAGIC = byteArrayOf(0x53, 0x54, 0x58, 0x54, 0x31)
     private const val TYPE_TEXT = 1
     private const val TYPE_FILE = 2
-    private const val MAX_CIPHER = 4_000_000
+    private const val MAX_CIPHER = 32_000_000
     private const val MAX_NAME = 255
 
     private val CH_ZWSP = '\u200B'

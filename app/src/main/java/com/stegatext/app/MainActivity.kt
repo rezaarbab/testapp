@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private var filePayload: Payload.File? = null
     private var extracted: Revealed? = null
     private var pendingSave: Pair<String, ByteArray>? = null
+    private var hiddenResult: String? = null
 
     private lateinit var etCarrier: TextInputEditText
     private lateinit var etSecret: TextInputEditText
@@ -122,10 +123,10 @@ class MainActivity : AppCompatActivity() {
         btnHide0().setOnClickListener { doHide() }
         btnReveal0().setOnClickListener { doReveal() }
 
-        findViewById<View>(R.id.btnCopy).setOnClickListener { copyToClipboard(tvOutput.text.toString()) }
-        findViewById<View>(R.id.btnShare).setOnClickListener { shareText(tvOutput.text.toString()) }
+        findViewById<View>(R.id.btnCopy).setOnClickListener { copyToClipboard(hiddenResult ?: tvOutput.text.toString()) }
+        findViewById<View>(R.id.btnShare).setOnClickListener { shareText(hiddenResult ?: tvOutput.text.toString()) }
         findViewById<View>(R.id.btnSave).setOnClickListener {
-            requestSave("stegatext.txt", tvOutput.text.toString().toByteArray(Charsets.UTF_8))
+            requestSave("stegatext.txt", (hiddenResult ?: tvOutput.text.toString()).toByteArray(Charsets.UTF_8))
         }
         findViewById<View>(R.id.btnSaveX).setOnClickListener {
             val e = extracted
@@ -143,21 +144,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun generateCarrier() {
-        try {
-            val payloadBits: Int = if (findViewById<RadioGroup>(R.id.payloadGroup).checkedRadioButtonId == R.id.radioFile) {
-                val f = filePayload
-                if (f == null) 640 else StegoEngine.neededBits(StegoEngine.plainFileSize(f.name.toByteArray(Charsets.UTF_8).size, f.bytes.size))
-            } else {
-                val s = etSecret.text?.toString() ?: ""
-                if (s.isEmpty()) 640 else StegoEngine.neededBits(StegoEngine.plainTextSize(s.toByteArray(Charsets.UTF_8).size))
-            }
-            val robust = switchRobust.isChecked
-            val text = StoryGenerator.generate(payloadBits, robust)
-            etCarrier.setText(text)
-            updateCapacity()
-        } catch (e: Exception) {
-            toast(e.message ?: "error")
+        toast(getString(R.string.working))
+        val payloadBits: Int = if (findViewById<RadioGroup>(R.id.payloadGroup).checkedRadioButtonId == R.id.radioFile) {
+            val f = filePayload
+            if (f == null) 640 else StegoEngine.neededBits(StegoEngine.plainFileSize(f.name.toByteArray(Charsets.UTF_8).size, f.bytes.size))
+        } else {
+            val s = etSecret.text?.toString() ?: ""
+            if (s.isEmpty()) 640 else StegoEngine.neededBits(StegoEngine.plainTextSize(s.toByteArray(Charsets.UTF_8).size))
         }
+        val robust = switchRobust.isChecked
+        Thread {
+            try {
+                val text = StoryGenerator.generate(payloadBits, robust)
+                runOnUiThread {
+                    etCarrier.setText(text)
+                    updateCapacity()
+                }
+            } catch (e: Exception) {
+                runOnUiThread { toast(e.message ?: "error") }
+            }
+        }.start()
     }
 
     private fun btnHide0(): View = findViewById(R.id.btnHide)
@@ -175,17 +181,28 @@ class MainActivity : AppCompatActivity() {
 
     private fun onFilePicked(uri: Uri) {
         if (pickTarget == 2) {
-            try {
-                val name = queryDisplayName(uri) ?: "file.bin"
-                val bytes = contentResolver.openInputStream(uri)?.use { it.readBytes() }
-                    ?: run { toast(getString(R.string.err_file_read)); return }
-                if (bytes.size > 8_000_000) { toast(getString(R.string.err_file_big)); return }
-                filePayload = Payload.File(name, bytes)
-                tvFileName.text = "$name (${bytes.size} B)"
-                updateCapacity()
-            } catch (e: Exception) {
-                toast(getString(R.string.err_file_read))
-            }
+            toast(getString(R.string.working))
+            Thread {
+                try {
+                    val name = queryDisplayName(uri) ?: "file.bin"
+                    val bytes = contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                    if (bytes == null) {
+                        runOnUiThread { toast(getString(R.string.err_file_read)) }
+                        return@Thread
+                    }
+                    runOnUiThread {
+                        if (bytes.size > 32_000_000) {
+                            toast(getString(R.string.err_file_big))
+                        } else {
+                            filePayload = Payload.File(name, bytes)
+                            tvFileName.text = "$name (${bytes.size} B)"
+                            updateCapacity()
+                        }
+                    }
+                } catch (e: Exception) {
+                    runOnUiThread { toast(getString(R.string.err_file_read)) }
+                }
+            }.start()
         } else {
             try {
                 val text = contentResolver.openInputStream(uri)?.use { String(it.readBytes(), Charsets.UTF_8) } ?: return
@@ -266,8 +283,9 @@ class MainActivity : AppCompatActivity() {
         Thread {
             try {
                 val out = StegoEngine.hide(carrier, payload, pw, robust)
+                hiddenResult = out
                 runOnUiThread {
-                    tvOutput.text = out
+                    tvOutput.text = if (out.length > 600) out.take(600) + "…" else out
                     findViewById<View>(R.id.outputCard).visibility = View.VISIBLE
                     btnHide0().isEnabled = true
                     toast(getString(R.string.done_hidden))

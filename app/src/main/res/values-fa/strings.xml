@@ -46,7 +46,7 @@
     <string name="err_badkey">کلید نامعتبر است (یا داده آسیب دیده)</string>
     <string name="err_nothing">در این متن چیز مخفی‌شده‌ای پیدا نشد</string>
     <string name="err_file_read">خواندن فایل ممکن نشد</string>
-    <string name="err_file_big">فایل بزرگ‌تر از ۸ مگابایت پشتیبانی نمی‌شود</string>
+    <string name="err_file_big">فایل بزرگ‌تر از ۳۲ مگابایت پشتیبانی نمی‌شود</string>
     <string name="done_copied">کپی شد</string>
     <string name="done_hidden">با موفقیت مخفی شد</string>
     <string name="done_saved">ذخیره شد</string>

@@ -60,7 +60,8 @@ object StoryGenerator {
     fun generate(requiredBits: Int, robustOnly: Boolean): String {
         val need = if (requiredBits < 640) 640 else requiredBits
         val sb = StringBuilder()
-        while (StegoEngine.capacityBits(sb.toString(), robustOnly) < need) {
+        var guard = 0
+        while (sb.length < 3_000_000) {
             val pool = ArrayList<String>()
             pool.addAll(faSentences)
             pool.addAll(enSentences)
@@ -70,7 +71,11 @@ object StoryGenerator {
                 sb.append(s)
                 sb.append(' ')
             }
-            if (pool.size % 2 == 0) sb.append('\n')
+            guard++
+            if (guard >= 16) {
+                guard = 0
+                if (StegoEngine.capacityBits(sb.toString(), robustOnly) >= need) break
+            }
         }
         return sb.toString().trim()
     }

@@ -46,7 +46,7 @@
     <string name="err_badkey">Invalid key (or data got damaged)</string>
     <string name="err_nothing">Nothing hidden found in this text</string>
     <string name="err_file_read">Could not read the file</string>
-    <string name="err_file_big">File larger than 8 MB is not supported</string>
+    <string name="err_file_big">File larger than 32 MB is not supported</string>
     <string name="done_copied">Copied</string>
     <string name="done_hidden">Hidden successfully</string>
     <string name="done_saved">Saved</string>
