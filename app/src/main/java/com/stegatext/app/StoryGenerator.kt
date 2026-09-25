@@ -10,14 +10,18 @@ object StoryGenerator {
         "پسرک که سریع‌تر از همه می‌دوید گفت این بازی‌ها برای ما بهترین‌هاست.",
         "بچه‌های حیاط آرزوی بزرگ‌ترین جاها را در دل داشتند و نمی‌خواستند تنها بمانند.",
         "عمو رضا گفت تازه‌ترین کلمه‌های خوب هنوز نوشته نشده‌اند.",
-        "ما در کوهستان‌های بی‌آروی ستاره‌های تازه‌ای پیدا کردیم."
+        "ما در کوهستان‌های بی‌آروی ستاره‌های تازه‌ای پیدا کردیم.",
+        "خاطره‌های کوچک همیشه در دفتر کسانی می‌مانند که سفر را برای همه‌ی ما ساده‌تر می‌کردند.",
+        "بچه‌های کوچک‌تر از همه درباره‌ی آسمان و ستاره‌های تازه پرسیدند."
     )
 
     private val enSentences = listOf(
         "My young man makes a perfect cake for everyone in the family.",
         "The books we keep are the most amazing memory of our team.",
         "Everyone says my jokes make the city a happy place.",
-        "Each young man keeps a map and a pen in his perfect bag."
+        "Each young man keeps a map and a pen in his perfect bag.",
+        "The dark window and a happy cake made our day so easy.",
+        "Everyone keeps a paper book and a memory of the map game."
     )
 
     private val ruSentences = listOf(
@@ -46,37 +50,50 @@ object StoryGenerator {
         }
     }
 
-    private fun shuffled(hunk: MutableList<String>, seed: Long): MutableList<String> {
-        val r = Rnd(seed)
-        for (i in hunk.size - 1 downTo 1) {
-            val j = r.below(i + 1)
-            val t = hunk[i]
-            hunk[i] = hunk[j]
-            hunk[j] = t
+    private fun hunk(robustOnly: Boolean, seed: Long): List<String> {
+        val pool = ArrayList<String>()
+        if (robustOnly) {
+            pool.addAll(enSentences)
+            pool.addAll(enSentences)
+            pool.addAll(enSentences)
+            pool.addAll(faSentences.subList(0, 4))
+        } else {
+            pool.addAll(faSentences)
+            pool.addAll(enSentences)
+            pool.addAll(ruSentences)
         }
-        return hunk
+        val r = Rnd(seed)
+        for (i in pool.size - 1 downTo 1) {
+            val j = r.below(i + 1)
+            val t = pool[i]
+            pool[i] = pool[j]
+            pool[j] = t
+        }
+        return pool
     }
 
     fun generate(requiredBits: Int, robustOnly: Boolean): String {
         val need = if (requiredBits < 640) 640 else requiredBits
         val sb = StringBuilder()
-        var guard = 0
-        while (sb.length < 3_000_000) {
-            val pool = ArrayList<String>()
-            pool.addAll(faSentences)
-            pool.addAll(enSentences)
-            pool.addAll(ruSentences)
-            shuffled(pool, System.nanoTime())
-            val pool2 = pool + pool + pool
-            for (s in pool2) {
-                sb.append(s)
-                sb.append(' ')
-            }
-            guard++
-            if (guard >= 2) {
-                guard = 0
-                if (StegoEngine.capacityBits(sb.toString(), robustOnly) >= need) break
-            }
+        val seed = System.nanoTime()
+        val first = hunk(robustOnly, seed)
+        for (s in first) { sb.append(s); sb.append(' ') }
+        val cap0 = StegoEngine.capacityBits(sb.toString(), robustOnly)
+        if (cap0 >= need) return sb.toString().trim()
+        val rate = if (sb.length > 0) cap0.toDouble() / sb.length else 0.05
+        val target = (need / rate * 1.25 + 400).toInt()
+        var pass = 1
+        while (sb.length < target && pass < 400) {
+            val h = hunk(robustOnly, seed + pass * 977)
+            for (s in h) { sb.append(s); sb.append(' ') }
+            pass++
+        }
+        var extra = 0
+        while (StegoEngine.capacityBits(sb.toString(), robustOnly) < need && extra < 10) {
+            val h = hunk(robustOnly, seed + pass * 991)
+            for (s in h) { sb.append(s); sb.append(' ') }
+            pass++
+            extra++
         }
         return sb.toString().trim()
     }
