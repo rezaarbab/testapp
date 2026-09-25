@@ -9,6 +9,7 @@
 
     <string name="carrier_title">Carrier text</string>
     <string name="carrier_hint_hide">Paste the carrier text (story/paragraph) here…</string>
+    <string name="auto_story">Auto story (fast, no paste needed)</string>
     <string name="btn_generate_carrier">Auto-generate carrier text</string>
     <string name="btn_sample">Insert sample story</string>
     <string name="secret_title">Secret payload</string>

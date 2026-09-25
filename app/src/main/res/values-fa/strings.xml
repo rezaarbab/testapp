@@ -9,6 +9,7 @@
 
     <string name="carrier_title">متن حامل</string>
     <string name="carrier_hint_hide">متن حامل (داستان/پاراگراف) را اینجا بچسبانید…</string>
+    <string name="auto_story">داستان خودکار (سریع، بدون پیست)</string>
     <string name="btn_generate_carrier">ساخت خودکار متن حامل</string>
     <string name="btn_sample">درج داستان نمونه</string>
     <string name="secret_title">پیام محرمانه</string>
