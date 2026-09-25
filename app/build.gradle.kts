@@ -35,6 +35,7 @@ android {
             it.testLogging {
                 events("failed", "skipped", "standardOut")
                 exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+            it.systemProperty("PBKDF2_ITERATIONS", "2000")
             }
         }
     }

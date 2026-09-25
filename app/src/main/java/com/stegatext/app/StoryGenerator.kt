@@ -73,7 +73,7 @@ object StoryGenerator {
                 sb.append(' ')
             }
             guard++
-            if (guard >= 16) {
+            if (guard >= 2) {
                 guard = 0
                 if (StegoEngine.capacityBits(sb.toString(), robustOnly) >= need) break
             }

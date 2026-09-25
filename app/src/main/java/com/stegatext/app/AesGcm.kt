@@ -12,7 +12,7 @@ class BadKeyException(message: String) : Exception(message)
 
 object AesGcm {
 
-    private const val ITERATIONS = 200_000
+    private val ITERATIONS = System.getProperty("PBKDF2_ITERATIONS")?.toIntOrNull() ?: 200_000
     private const val KEY_BITS = 256
     private val AAD = byteArrayOf(0x53, 0x54, 0x58, 0x54, 0x31)
 
