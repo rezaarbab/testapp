@@ -1,8 +1,5 @@
 package com.stegatext.app
 
-import java.security.MessageDigest
-import java.security.SecureRandom
-
 class CapacityException(val neededBits: Int, val availableBits: Int) : Exception()
 
 sealed class Payload {
@@ -80,8 +77,14 @@ object StegoEngine {
 
     private fun primaryOf(c: Char): Char = if (PRIMARY.contains(c)) c else TWINS[c] ?: c
 
-    fun normalizeCarriers(carrier: String): String =
-        carrier.filter { !STRIP_ALL.contains(it) }.map { primaryOf(it) }.joinToString("")
+    fun normalizeCarriers(carrier: String): String {
+        val sb = StringBuilder(carrier.length)
+        for (c in carrier) {
+            if (STRIP_ALL.contains(c)) continue
+            sb.append(primaryOf(c))
+        }
+        return sb.toString()
+    }
 
     fun capacityBits(carrier: String, robustOnly: Boolean): Int =
         buildSlots(normalizeCarriers(carrier), robustOnly).size
@@ -107,16 +110,25 @@ object StegoEngine {
         writeIntBits(MAGIC16, 16, bits, 0)
         writeIntBits(cipher.size, 32, bits, 16)
         bitsOfBytes(cipher).copyInto(bits, 48)
-        val chars = canon.toMutableList()
-        val insertions = ArrayList<Pair<Int, Char>>()
+        val chars = canon.toCharArray()
+        val insList = ArrayList<Slot.Ins>()
         for (b in 0 until bitCount) {
             when (val s = slots[shuffled[b]]) {
                 is Slot.Swap -> if (bits[b]) chars[s.at] = s.twin
-                is Slot.Ins -> if (bits[b]) insertions.add(s.at to s.ch)
+                is Slot.Ins -> if (bits[b]) insList.add(s)
             }
         }
-        insertions.sortedByDescending { it.first }.forEach { (pos, ch) -> chars.add(pos, ch) }
-        return chars.joinToString("")
+        if (insList.isEmpty()) return String(chars)
+        insList.sortBy { it.at }
+        val out = CharArray(chars.size + insList.size)
+        var src = 0
+        var dst = 0
+        for (ins in insList) {
+            while (src < ins.at) out[dst++] = chars[src++]
+            out[dst++] = ins.ch
+        }
+        while (src < chars.size) out[dst++] = chars[src++]
+        return String(out)
     }
 
     fun reveal(stego: String, password: CharArray): Revealed? {
@@ -150,8 +162,6 @@ object StegoEngine {
         class Ins(val at: Int, val prev: Int, val ch: Char) : Slot()
     }
 
-    private class LetterNode(val ch: Char, val idx: Int)
-
     private fun isGlue(c: Char): Boolean = !c.isLetter() && GLUE_CHARS.contains(c)
 
     private fun family(c: Char): Int {
@@ -167,16 +177,24 @@ object StegoEngine {
     }
 
     private fun buildSlots(s: String, robustOnly: Boolean): List<Slot> {
-        val letters = ArrayList<LetterNode>()
-        s.forEachIndexed { i, c -> if (c.isLetter()) letters.add(LetterNode(c, i)) }
-        val n = letters.size
+        var count = 0
+        for (c in s) if (c.isLetter()) count++
+        val n = count
         if (n < 2) return emptyList()
+
+        val lch = CharArray(n)
+        val lidx = IntArray(n)
+        var t = 0
+        for (i in s.indices) {
+            val c = s[i]
+            if (c.isLetter()) { lch[t] = c; lidx[t] = i; t++ }
+        }
 
         val sameToken = BooleanArray(n - 1)
         for (j in 0 until n - 1) {
             var cont = true
-            for (t in letters[j].idx + 1 until letters[j + 1].idx) {
-                if (!isGlue(s[t])) { cont = false; break }
+            for (u in lidx[j] + 1 until lidx[j + 1]) {
+                if (!isGlue(s[u])) { cont = false; break }
             }
             sameToken[j] = cont
         }
@@ -191,7 +209,7 @@ object StegoEngine {
             var end = k
             while (end + 1 < n && sameToken[end]) end++
             val word = StringBuilder()
-            for (t in k..end) word.append(primaryOf(letters[t].ch))
+            for (u in k..end) word.append(primaryOf(lch[u]))
             val w = word.toString()
             var slotK = -1
             if (w.endsWith("هایی") && w.length >= 8) slotK = end - 3
@@ -203,7 +221,7 @@ object StegoEngine {
             else if (w.startsWith("می") && w.length >= 5) slotK = k + 2
             if (slotK > 0 && slotK > k && slotK <= end) {
                 morphK.add(slotK)
-                morphSlots.add(Slot.Ins(letters[slotK].idx, letters[slotK - 1].idx, CH_ZWNJ))
+                morphSlots.add(Slot.Ins(lidx[slotK], lidx[slotK - 1], CH_ZWNJ))
             }
             k = end + 1
         }
@@ -211,15 +229,15 @@ object StegoEngine {
         for (j in 0 until n - 1) {
             val target = j + 1
             if (morphK.contains(target)) continue
-            val f = family(letters[j].ch)
-            if (f != 0 && f == family(letters[target].ch)) {
-                gapSlots.add(Slot.Ins(letters[target].idx, letters[j].idx, CH_ZWJ))
+            val f = family(lch[j])
+            if (f != 0 && f == family(lch[target])) {
+                gapSlots.add(Slot.Ins(lidx[target], lidx[j], CH_ZWJ))
             }
         }
 
         for (j in 0 until n) {
-            val twin = TWINS[letters[j].ch]
-            if (twin != null) swapSlots.add(Slot.Swap(letters[j].idx, twin))
+            val twin = TWINS[lch[j]]
+            if (twin != null) swapSlots.add(Slot.Swap(lidx[j], twin))
         }
 
         return if (robustOnly) swapSlots else morphSlots + gapSlots + swapSlots

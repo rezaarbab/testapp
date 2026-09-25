@@ -120,6 +120,11 @@ class MainActivity : AppCompatActivity() {
             filePicker.launch(arrayOf("*/*"))
         }
 
+        findViewById<View>(R.id.btnPickStegoTxt).setOnClickListener {
+            pickTarget = 1
+            filePicker.launch(arrayOf("*/*"))
+        }
+
         btnHide0().setOnClickListener { doHide() }
         btnReveal0().setOnClickListener { doReveal() }
 
@@ -215,36 +220,48 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onFilePicked(uri: Uri) {
-        if (pickTarget == 2) {
-            toast(getString(R.string.working))
-            Thread {
-                try {
-                    val name = queryDisplayName(uri) ?: "file.bin"
-                    val bytes = contentResolver.openInputStream(uri)?.use { it.readBytes() }
-                    if (bytes == null) {
-                        runOnUiThread { toast(getString(R.string.err_file_read)) }
-                        return@Thread
-                    }
-                    runOnUiThread {
-                        if (bytes.size > 32_000_000) {
-                            toast(getString(R.string.err_file_big))
-                        } else {
-                            filePayload = Payload.File(name, bytes)
-                            tvFileName.text = "$name (${bytes.size} B)"
-                            updateCapacity()
+        when (pickTarget) {
+            2 -> {
+                toast(getString(R.string.working))
+                Thread {
+                    try {
+                        val name = queryDisplayName(uri) ?: "file.bin"
+                        val bytes = contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                        if (bytes == null) {
+                            runOnUiThread { toast(getString(R.string.err_file_read)) }
+                            return@Thread
                         }
+                        runOnUiThread {
+                            if (bytes.size > 32_000_000) {
+                                toast(getString(R.string.err_file_big))
+                            } else {
+                                filePayload = Payload.File(name, bytes)
+                                tvFileName.text = "$name (${bytes.size} B)"
+                                updateCapacity()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        runOnUiThread { toast(getString(R.string.err_file_read)) }
                     }
+                }.start()
+            }
+            1 -> {
+                try {
+                    val text = contentResolver.openInputStream(uri)?.use { String(it.readBytes(), Charsets.UTF_8) } ?: return
+                    etCarrierX.setText(text)
+                    updateCapacity()
                 } catch (e: Exception) {
-                    runOnUiThread { toast(getString(R.string.err_file_read)) }
+                    toast(getString(R.string.err_file_read))
                 }
-            }.start()
-        } else {
-            try {
-                val text = contentResolver.openInputStream(uri)?.use { String(it.readBytes(), Charsets.UTF_8) } ?: return
-                etCarrier.setText(text)
-                updateCapacity()
-            } catch (e: Exception) {
-                toast(getString(R.string.err_file_read))
+            }
+            else -> {
+                try {
+                    val text = contentResolver.openInputStream(uri)?.use { String(it.readBytes(), Charsets.UTF_8) } ?: return
+                    etCarrier.setText(text)
+                    updateCapacity()
+                } catch (e: Exception) {
+                    toast(getString(R.string.err_file_read))
+                }
             }
         }
     }

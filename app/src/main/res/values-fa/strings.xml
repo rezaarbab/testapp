@@ -37,6 +37,7 @@
     <string name="btn_save">ذخیره</string>
 
     <string name="carrier_hint_reveal">متن نهان را اینجا بچسبانید…</string>
+    <string name="btn_pick_stego_file">باز کردن فایل متن نهان</string>
     <string name="btn_reveal">بازیابی محرمانه</string>
     <string name="result_title">نتیجه</string>
     <string name="huge_carrier_warn">حامل واقعا بزرگ شد و در کادر جا نمی‌شد؛ برای مخفی‌سازی مستقیم، کلید و پیام را پیش از «ساخت خودکار» پر کن.</string>

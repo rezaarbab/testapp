@@ -34,6 +34,8 @@ Secret text / any file ──AES-256-GCM──► encrypted bytes
 
 - 🌍 **Any script carrier** — Persian, English, Russian, even all mixed in one text
 - 📎 **Payload = text or any file** (PDF/MP3/image… via any format, size limited by carrier capacity)
+- ⚡ **Instant carrier generation** — carrier text is sized exactly to the payload (bits-per-char measured once), no more long waits
+- 📂 **Reveal from file** — open a saved stego `.txt` file directly in the Reveal tab; the File Vault can open a stego file at any time (not only right after hiding)
 - 🔐 AES-256-GCM + PBKDF2 (200,000 iterations), mandatory key
 - 📊 Live capacity meter (bits/bytes) before hiding
 - 🇮🇷 Persian (RTL) / English UI with instant switch (persisted)

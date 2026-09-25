@@ -37,6 +37,7 @@
     <string name="btn_save">Save</string>
 
     <string name="carrier_hint_reveal">Paste the stego text here…</string>
+    <string name="btn_pick_stego_file">Open stego text file (.txt)</string>
     <string name="btn_reveal">Reveal secret</string>
     <string name="result_title">Result</string>
     <string name="huge_carrier_warn">Carrier is too long to show in the box — so it was hidden directly. Fill key \u0026amp; password next time.</string>

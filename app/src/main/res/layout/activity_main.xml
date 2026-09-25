@@ -420,6 +420,18 @@
                         android:textColor="@color/text"
                         android:textColorHint="@color/text_hint" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnPickStegoTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/card_bg"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/btn_pick_stego_file"
+                    android:textColor="@color/text"
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout

@@ -106,6 +106,8 @@ class FileVaultActivity : AppCompatActivity() {
     private fun onStegoPicked(uri: Uri) {
         try {
             stego = contentResolver.openInputStream(uri)?.use { it.readBytes() }
+            (findViewById<View>(R.id.tvVaultStegoName) as TextView).text =
+                displayName(uri) + " (" + (stego?.size ?: 0) + " B)"
             updateCapacity()
         } catch (e: Exception) {
             toast(getString(R.string.err_file_read))

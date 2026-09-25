@@ -170,17 +170,34 @@
                 android:text="@string/btn_save"
                 android:textColor="@color/text"
                 android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/card_bg"
+            android:orientation="vertical"
+            android:padding="16dp">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnVaultPickStego"
                 android:layout_width="wrap_content"
                 android:layout_height="44dp"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/card_bg"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:text="@string/vault_pick_stego"
                 android:textColor="@color/text"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvVaultStegoName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/no_file"
+                android:textColor="@color/text_hint"
                 android:textSize="13sp" />
         </LinearLayout>
 
